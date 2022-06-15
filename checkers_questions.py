@@ -178,7 +178,7 @@ class Checker(TwoPlayerGame):
          [W,0,W,0,W,0,W,0]]
         ------
         """
-        self.current_player.pos = [(x,y) for (x,y) in zip(np.where(pos == ["W", "B"][self.current_player])[0],np.where(pos == ["W", "B"][self.current_player])[1])]
+        self.players[self.current_player-1].pos = [(x,y) for (x,y) in zip(np.where(pos == ["W", "B"][self.current_player-1])[0],np.where(pos == ["W", "B"][self.current_player-1])[1])]
             
 
     def lose(self):
@@ -186,8 +186,9 @@ class Checker(TwoPlayerGame):
         black lose if white piece is in black territory
         white lose if black piece is in white territory
         """
-        return any(x in self.players[self.current_player-1].pos for x in [self.white_territory,self.black_territory][self.current_player])
-
+        #print(self.current_player, self.players[self.current_player-1])
+        return set(self.players[self.current_player-2].pos) & set([self.white_territory,self.black_territory][self.current_player-1])
+        
     def is_over(self):
         """
         game is over immediately when one player get one of its piece into opponent's territory.
@@ -216,6 +217,8 @@ class Checker(TwoPlayerGame):
        """
        if self.lose():
            return -100
+       else:
+           return 0
 
 if __name__ == "__main__":
     ai = Negamax(1) # The AI will think 13 moves in advance
